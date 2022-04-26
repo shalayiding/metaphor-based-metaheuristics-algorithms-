@@ -4,9 +4,6 @@ from numpy import random
 
 
 
-
-
-
 #----------------------------------DE------------------------------
 D = 2
 # return new vector accecpt scaller F and 3 different vector
@@ -114,6 +111,32 @@ def PSO_solve(f, particles_size, bounds, iteration,alpha,beta):
     return best_candidate,best_candidate_eva
 
 #-----------------------------------END PSO--------------------------------------
+
+
+
+
+
+
+
+
+
+# Static function take cost function and iterate over 30 trails 
+# with given set of step_size and Tzero array to output the min, max and means,standard deviation value 
+def static(cost_function,solver,test_population_size,bounds,test_p1,test_p2,itration_time):
+    for i in range(len(test_population_size)):
+        for j in range(len(test_p1)):
+            best_set = []
+            best_eva_set = [] 
+            for t in range(0,30):
+                best,best_eva = solver(cost_function,test_population_size[i],bounds,itration_time,test_p1[j],test_p2[j])
+                best_set.append(best)
+                best_eva_set.append(best_eva)
+            print("population size is :",test_population_size[i])
+            print("parameter 1 size is :",test_p1[j])
+            print("parameter 2 size is :",test_p2[j])
+            print("Mean=", f"{np.sum(best_eva_set)/len(best_eva_set):.9f}")
+            print("Std=",f"{np.std(best_eva_set):.9f}")
+            print("Min=",f"{np.min(best_eva_set):.9f}")
 
 
 
