@@ -18,6 +18,7 @@ bounds = [lower_bound,upper_bound]
 # def DE_solve(f, population_size, bounds, iteration,vec_scaller_f,Cr):
 print(algo.DE_solve(func.F_08,100,bounds,200,0.4,0.8))
 print(algo.PSO_solve(func.F_08, 100, bounds, 200,0.4,0.8))
+print(algo.KH_solve(func.F_08, 100, 10, 6, 3, 40 ))
 
 
 print(algo.DE_solve(func.F_09,100,bounds,200,0.4,0.8))

@@ -120,6 +120,42 @@ def PSO_solve(f, particles_size, bounds, iteration,alpha,beta):
 
 
 
+
+#-----------------------------------Krill Herd -------------------------------------
+
+def KH_solve(f, population_size, generation_counter, vf, dmax, nmax):
+    # randomly generate population, initialize location of krill
+
+    # calculate fitness of each krill
+
+    # while max generation # isn't hit
+        # sort the population by fitness
+        # for each krill
+            # calculate: 1) motion induced by other individuals
+            #...2) foraging motion
+            #...3) physical diffusion
+            # implement genetic operations
+            # update locations of krill
+            # calculate fitness for each krill in new positions
+        # increment generation counter
+    pass
+
+
+
+
+
+
+
+
+
+
+
+#-----------------------------------END Krill Herd--------------------------------------
+
+
+
+
+
 # Static function take cost function and iterate over 30 trails 
 # with given set of step_size and Tzero array to output the min, max and means,standard deviation value 
 def static(cost_function,solver,test_population_size,bounds,test_p1,test_p2,itration_time):
