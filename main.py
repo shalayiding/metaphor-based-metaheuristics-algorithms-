@@ -11,11 +11,14 @@ from p1_function import OptimaMapping
 
 
 
-lower_bound = -500
-upper_bound = 500
+lower_bound = -2
+upper_bound = 2
 bounds = [lower_bound,upper_bound]
 
+# KH_solve(f, population_size, bounds, generation_counter, vf, dmax, nmax):
+print(algo.KH_solve(func.F_01,10,bounds,10,0.4,0.8,1))
 
+exit(100)
 print(algo.DE_solve(func.F_01,100,bounds,200,0.4,0.8))
 print(algo.PSO_solve(func.F_01, 100, bounds, 200,0.4,0.8))
 
