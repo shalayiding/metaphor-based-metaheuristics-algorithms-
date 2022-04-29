@@ -4,6 +4,16 @@ from numpy import random
 
 
 
+def generate_random_population(f, population_size, bounds):
+    population = []
+    population_eva = []
+    for i in range(population_size):    #generate number of population and evaluate them 
+        population.append(
+            np.array([bounds[0] + random.randn(len(bounds)) * (bounds[1] - bounds[0])]))
+        population_eva.append(f(population[i]))
+    best_j = np.argmin(population_eva) # find minimum 
+    return population, population_eva, best_j
+
 #----------------------------------DE------------------------------
 D = 2
 # return new vector accecpt scaller F and 3 different vector
@@ -37,14 +47,8 @@ def crossover(mutated_vec,current_vec,Cr):
 # this fucntion is regular de return best candidate and it is evaluation score
 # it takes cost function, population size , bounds, iteration , scaller f, and Cr
 def DE_solve(f, population_size, bounds, iteration,vec_scaller_f,Cr):
-    population = []
-    population_eva = []
-    for i in range(population_size):    #generate number of population and evaluate them 
-        population.append(
-            np.array([bounds[0] + random.rand(len(bounds)) * (bounds[1] - bounds[0])]))
-        population_eva.append(f(population[i]))
-    best_j = np.argmin(population_eva) # find minimum 
-    best_candidate = population[best_j] 
+    population, population_eva, best_idx = generate_random_population(f, population_size, bounds)
+    best_candidate = population[best_idx] 
     best_candidate_eva = f(best_candidate)
 
     for i in range(iteration): # until givin iteration 
@@ -115,6 +119,45 @@ def PSO_solve(f, particles_size, bounds, iteration,alpha,beta):
 
 
 
+
+
+
+
+
+
+#-----------------------------------Krill Herd -------------------------------------
+
+def KH_solve(f, population_size, bounds, generation_counter, vf, dmax, nmax):
+    # randomly generate population, initialize location of krill
+    population, population_eva, best_idx = generate_random_population(f, population_size, bounds)
+    best_candidate = population[best_idx] 
+    best_candidate_eva = f(best_candidate)
+
+    # calculate fitness of each krill
+
+    # while max generation # isn't hit
+        # sort the population by fitness
+        # for each krill
+            # calculate: 1) motion induced by other individuals
+            #...2) foraging motion
+            #...3) physical diffusion
+            # implement genetic operations
+            # update locations of krill
+            # calculate fitness for each krill in new positions
+        # increment generation counter
+    pass
+
+
+
+
+
+
+
+
+
+
+
+#-----------------------------------END Krill Herd--------------------------------------
 
 
 

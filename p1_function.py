@@ -126,3 +126,8 @@ def F_14(x):
         for i in range(0,len(item)):
             y  += math.floor(item[i])
     return y
+
+
+class OptimaMapping():
+    F_01 = F_03 = 0
+    
