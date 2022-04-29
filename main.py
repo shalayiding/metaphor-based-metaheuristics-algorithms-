@@ -10,9 +10,28 @@ import p1_function as func
 
 
 
-lower_bound = -10
-upper_bound = 10
+lower_bound = -500
+upper_bound = 500
 bounds = [lower_bound,upper_bound]
+
+
+print(algo.DE_solve(func.F_01,100,bounds,200,0.4,0.8))
+print(algo.PSO_solve(func.F_01, 100, bounds, 200,0.4,0.8))
+
+# print(algo.DE_solve(func.F_02,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(func.F_02, 100, bounds, 200,0.4,0.8))
+
+print(algo.DE_solve(func.F_03,100,bounds,200,0.4,0.8))
+print(algo.PSO_solve(func.F_03, 100, bounds, 200,0.4,0.8))
+
+print(algo.DE_solve(func.F_06,100,bounds,200,0.4,0.8))
+print(algo.PSO_solve(func.F_06, 100, bounds, 200,0.4,0.8))
+
+
+print(algo.DE_solve(func.F_07,100,bounds,200,0.4,0.8))
+print(algo.PSO_solve(func.F_07, 100, bounds, 200,0.4,0.8))
+
+
 
 
 # def DE_solve(f, population_size, bounds, iteration,vec_scaller_f,Cr):
