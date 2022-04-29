@@ -132,7 +132,7 @@ def PSO_solve(f, particles_size, bounds, iteration, alpha, beta):
 
 # -----------------------------------Krill Herd -------------------------------------
 
-def KH_solve(f, population_size, bounds, generation_counter, vf, dmax, Nmax):
+def KH_solve(f, population_size, bounds, generation_counter, Vf, dmax, Nmax):
     # randomly generate population, initialize location of krill
     population, population_eva, best_idx = generate_random_population(
         f, population_size, bounds)
@@ -164,8 +164,11 @@ def KH_solve(f, population_size, bounds, generation_counter, vf, dmax, Nmax):
             Atarget = Cbest*Kibest*Xibest
             Ai = Alocal + Atarget
             Ni = Nmax*Ai + weight*Ni
-
-            
+            Xfood = sum([population[e]/population_eva[e] for e in range(len(population_eva))])/\
+                sum([1/population_eva[e] for e in range(len(population_eva))])
+            Cfood = 2*(1-i/generation_counter)
+            Bifood = Cfood
+            Bi = Bifood + Bibest
             Fi = Vf*Bi + weight*Fi
 
             # updat the positon of the krill
