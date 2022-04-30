@@ -15,25 +15,24 @@ lower_bound = -2
 upper_bound = 2
 bounds = [lower_bound,upper_bound]
 
-# KH_solve(f, population_size, bounds, generation_counter, vf, dmax, nmax):
-print(algo.KH_solve(func.F_01,10,bounds,10,0.4,0.8,1))
 
-exit(100)
-print(algo.DE_solve(func.F_01,100,bounds,200,0.4,0.8))
-print(algo.PSO_solve(func.F_01, 100, bounds, 200,0.4,0.8))
-
-# print(algo.DE_solve(func.F_02,100,bounds,200,0.4,0.8))
-# print(algo.PSO_solve(func.F_02, 100, bounds, 200,0.4,0.8))
-
-print(algo.DE_solve(func.F_03,100,bounds,200,0.4,0.8))
-print(algo.PSO_solve(func.F_03, 100, bounds, 200,0.4,0.8))
-
-print(algo.DE_solve(func.F_06,100,bounds,200,0.4,0.8))
-print(algo.PSO_solve(func.F_06, 100, bounds, 200,0.4,0.8))
+# print(algo.DE_solve(func.F_01,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(func.F_01, 100, bounds, 200,0.4,0.8))
+# print(algo.KH_solve(func.F_01,100,bounds,200,0.4,0.8,1))
 
 
-print(algo.DE_solve(func.F_07,100,bounds,200,0.4,0.8))
-print(algo.PSO_solve(func.F_07, 100, bounds, 200,0.4,0.8))
+# # print(algo.DE_solve(func.F_02,100,bounds,200,0.4,0.8))
+# # print(algo.PSO_solve(func.F_02, 100, bounds, 200,0.4,0.8))
+
+# print(algo.DE_solve(func.F_03,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(func.F_03, 100, bounds, 200,0.4,0.8))
+
+# print(algo.DE_solve(func.F_06,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(func.F_06, 100, bounds, 200,0.4,0.8))
+
+
+# print(algo.DE_solve(func.F_07,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(func.F_07, 100, bounds, 200,0.4,0.8))
 
 
 
@@ -43,7 +42,7 @@ print("Function 08: Rosenbrock Function")
 print("Optima: ", OptimaMapping.F_01)
 print(algo.DE_solve(func.F_08,100,bounds,200,0.4,0.8))
 print(algo.PSO_solve(func.F_08, 100, bounds, 200,0.4,0.8))
-print(algo.KH_solve(func.F_08, 100, bounds, 10, 6, 3, 40 ))
+print(algo.KH_solve(func.F_08, 100, bounds, 200,0.4,0.8,0.8))
 
 print("Function 09: Schwefel 2.26 Function")
 print(algo.DE_solve(func.F_09,100,bounds,200,0.4,0.8))

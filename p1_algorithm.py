@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 from numpy import random
+from sklearn.decomposition import randomized_svd
 
 
 def generate_random_population(f, population_size, bounds):
@@ -132,47 +133,91 @@ def PSO_solve(f, particles_size, bounds, iteration, alpha, beta):
 
 # -----------------------------------Krill Herd -------------------------------------
 
-def KH_solve(f, population_size, bounds, generation_counter, Vf, dmax, Nmax):
+def KH_solve(f, population_size, bounds, generation_counter, Vf, Dmax, Nmax):
     # randomly generate population, initialize location of krill
     population, population_eva, best_idx = generate_random_population(
         f, population_size, bounds)
     best_candidate = population[best_idx]
     best_candidate_eva = f(best_candidate)
-
-    weight = 0.6  # in range of 0 to 1
+    Ni = 1
+    Fi = 1
+    weight = 0.4  # in range of 0 to 1
+    rand_num = 0.3
+    Ct = 0.8
+    
     for i in range(0, generation_counter):
-        population_eva, population = zip(
-            *sorted(zip(population_eva, population)))
+        population.sort(key=f)
+        population_eva = [f(population[e]) for e in range(len(population))]
         best_candidate = population[0]
         best_candidate_eva = population_eva[0]
-
         for j in range(0, len(population)):
+            #   Motion induced by other krill individuals ----------------------------
             Xj = []
             Kj = []
+            Alocal = 0
             for c in range(0, len(population)):
                 if j != c:
-                    tmp = (population[c] - population[j]) / \
-                        (abs(population[j] - population[c])+0.3)
-                    Xj.append(tmp)
-                    tmp = (population_eva[j] - population_eva[c]) / \
+                    Xjtmp = (population[c] - population[j]) / \
+                        (abs(population[c] - population[j])+random.rand(1))
+                    Xj.append(Xjtmp)
+                    Kjtmp = (population_eva[j] - population_eva[c]) / \
                         (min(population_eva) - max(population_eva))
-                    Kj.append(tmp)
-            Alocal = sum([Xj[e] * Kj[e] for e in range(len(Xj))])
+                    Kj.append(Kjtmp) 
+            Alocal = sum([Xj[e] * Kj[e] for e in range(len(Xj))])  # equation 4
             Cbest = 2*(random.rand(1) + i/generation_counter)
-            Kibest = (best_candidate_eva - population_eva[j])/(min(population_eva) - max(population_eva))
-            Xibest = (best_candidate - population[j])/(abs(population[j] - best_candidate)+0.3)
-            Atarget = Cbest*Kibest*Xibest
-            Ai = Alocal + Atarget
-            Ni = Nmax*Ai + weight*Ni
+            Kibest = min(Kj)
+            Xibest = Xj[Kj.index(Kibest)]
+            Atarget = Cbest*Kibest*Xibest  
+            Ai = Alocal + Atarget     # equation 3
+            Ni = Nmax*Ai + weight*Ni    #equation 2
+            
+            #  Foraging motion ----------------------------
             Xfood = sum([population[e]/population_eva[e] for e in range(len(population_eva))])/\
-                sum([1/population_eva[e] for e in range(len(population_eva))])
-            Cfood = 2*(1-i/generation_counter)
-            Bifood = Cfood
-            Bi = Bifood + Bibest
-            Fi = Vf*Bi + weight*Fi
+                sum([1/population_eva[e] for e in range(len(population_eva))]) # equeation 12
+            Cfood = 2*(1-i/generation_counter) # equeation 14
+            
+            Kifood = (Xfood - population_eva[j])/(min(population_eva) - max(population_eva))
+            Xifood = (Xfood - population[j])/(abs(population[j] - Xfood)+random.rand(1))
+            Bibest = Kibest*Xibest # equeation 15
+            Bifood = Cfood*Kifood*Xifood # equeation 13
+
+            Bi = Bifood + Bibest #  equeation 11
+            Fi = Vf*Bi + weight*Fi # equation 10
+
+
+
+            #physical diffusion ----------------------------
+            Di = Dmax* (1-i/generation_counter)*random.uniform(-1,1,2)
+            dXi_dt = Ni + Fi + Di # equation 1
+            deltat = Ct*(bounds[1] - bounds[0])  # equation 19
+            Newposition = population[j] + deltat*dXi_dt # equation 18
+            # cross over 
+            Cr = 0.2*Kibest # equation 21
+            Newposition = crossover(Newposition, population[j], Cr) # equation 20
+
+            
+            #mutation around the global best 
+            Mu = 0.05/Kibest# equation 23
+            if random.rand(1) < Mu:
+                indexs_without_j = [indexs_without_j for indexs_without_j in range(
+                population_size) if indexs_without_j != j]
+                v1,v2,v3 = random.choice(indexs_without_j, 3, replace=False)
+                Three_vector = [best_candidate, population[j], population[v3]]
+                Newposition = mutation(
+                    Three_vector, random.rand(1))  # generate new vector
+            
+
+            
+            
+            clip_bound(Newposition, bounds)
+            if f(Newposition) < f(population[j]):
+                population[j] = np.array(Newposition)
+                population_eva[j] = f(population[j])
+                # print(population_eva[j])
+                # print(population)
+                # print(best_candidate_eva)
 
             # updat the positon of the krill
-
     # calculate fitness of each krill
     # while max generation # isn't hit
         # sort the population by fitness
@@ -184,7 +229,7 @@ def KH_solve(f, population_size, bounds, generation_counter, Vf, dmax, Nmax):
             # update locations of krill
             # calculate fitness for each krill in new positions
         # increment generation counter
-    pass
+    return best_candidate,best_candidate_eva
 
 
 # -----------------------------------END Krill Herd--------------------------------------
