@@ -239,6 +239,128 @@ def KH_solve(start_population,f, population_size, bounds, generation_counter, Vf
 # -----------------------------------END Krill Herd--------------------------------------
 
 
+
+
+# -----------------------------------Krill Herd -------------------------------------
+
+def MKH_solve(start_population,f, population_size, bounds, generation_counter, Vf, Dmax, Nmax,Ru,Mu):
+    population = start_population[0]
+    population_eva = start_population[1]
+    best_idx = start_population[2]
+    
+    best_candidate = population[best_idx]
+    best_candidate_eva = f(best_candidate)
+
+    weight = 0.4  # in range of 0 to 1
+    rand_num = 0.3
+    Ct = 0.8
+    mat_solutions = []
+
+    N = [0 for a in range(0,population_size)]
+    F = [0 for a in range(0,population_size)]
+    D = [0 for a in range(0,population_size)]
+
+    for i in range(0, generation_counter):
+        mat_solutions.append([best_candidate, best_candidate_eva])
+        population.sort(key=f)
+        population_eva = [f(population[e]) for e in range(len(population))]
+        best_candidate = population[0]
+        best_candidate_eva = population_eva[0]
+        
+        for j in range(0, len(population)):
+            #   Motion induced by other krill individuals ----------------------------
+            
+            Alocal = 0
+            Xj = []
+            Kj = []
+            for c in range(0, len(population)):
+                if j != c:
+                    Xjtmp = (population[c] - population[j]) / \
+                        (abs(population[c] - population[j])+random.rand(1))
+                    Xj.append(Xjtmp)
+                    tmp  =min(population_eva) - max(population_eva) 
+                    if tmp == 0:
+                        tmp = 0.0001
+                    Kjtmp = (population_eva[j] - population_eva[c]) / \
+                        (tmp)
+                    Kj.append(Kjtmp) 
+            Alocal = sum([(Xj[e] * Kj[e]) for e in range(len(Xj))])  # equation 4
+            Cbest = 2*(random.rand(1) + i/generation_counter)
+
+            Kibest = min(Kj)
+            Xibest = Xj[Kj.index(Kibest)]
+            Atarget = Cbest*Kibest*Xibest  
+            Ai = Alocal + Atarget     # equation 3
+            N[j] = Nmax*Ai + weight*N[j]    #equation 2
+            
+            #  Foraging motion ----------------------------
+            Xfood = sum([ (population[e]/population_eva[e]) for e in range(len(population_eva))])/\
+                sum([1/population_eva[e] for e in range(len(population_eva))]) # equeation 12
+            Cfood = 2*(1-i/generation_counter) # equeation 14
+            tmp  = min(population_eva) - max(population_eva) 
+            if tmp == 0:
+                tmp = 0.0001
+            Kifood = (Xfood - population_eva[j])/tmp
+            Xifood = (Xfood - population[j])/(abs(population[j] - Xfood)+random.rand(1))
+            Bibest = Kibest*Xibest # equeation 15
+            Bifood = Cfood*Kifood*Xifood # equeation 13
+
+            Bi = Bifood + Bibest #  equeation 11
+            F[j] = Vf*Bi + weight*F[j] # equation 10
+            #physical diffusion ----------------------------
+            D[j] = Dmax* (1-i/generation_counter)*random.uniform(-1,1,2)
+            dXi_dt = N[j] + F[j] + D[j] # equation 1
+
+
+            Newposition = population[j] + Ct*dXi_dt # equation 18
+            # cross over 
+            Cr = 0.2*Kibest # equation 21
+            Newposition = crossover(Newposition, population[j], Cr) # equation 20
+
+            
+            #mutation around the global best 
+            Mu = 0.05/Kibest# equation 23
+            if random.rand(1) < Mu:
+                indexs_without_j = [indexs_without_j for indexs_without_j in range(
+                population_size) if indexs_without_j != j]
+                v1,v2,v3 = random.choice(indexs_without_j, 3, replace=False)
+                Three_vector = [best_candidate, population[v2], population[v3]]
+                Newposition = mutation(
+                    Three_vector, random.rand(1))  # generate new vector
+        
+            clip_bound(Newposition, bounds)
+            if f(Newposition) < f(population[j]):
+                population[j] = np.array(Newposition)
+                population_eva[j] = f(population[j])
+
+            
+            if Ru < random.rand(1):
+                for c in range(0, len(population)):
+                    if Mu < random.rand(1):
+                        target = population[c]
+                        Newposition = crossover(target,population[j],Cr)
+            clip_bound(Newposition, bounds)
+            
+
+
+
+
+
+
+    return best_candidate, best_candidate_eva,mat_solutions
+
+
+# -----------------------------------END Krill Herd--------------------------------------
+
+
+
+
+
+
+
+
+
+
 # Static function take cost function and iterate over 30 trails
 # with given set of step_size and Tzero array to output the min, max and means,standard deviation value
 def static(cost_function, solver, test_population_size, bounds, test_p1, test_p2, itration_time):

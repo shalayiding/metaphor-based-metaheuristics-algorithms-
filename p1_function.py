@@ -17,13 +17,13 @@ def F_01(x):
 
 
 # Fletcher-Powell function
-def F_02(x):
-    Ai = 0
-    for item in x:
-        for i in range:
-            pass
-        pass
-    return 0
+# def F_02(x):
+#     Ai = 0
+#     for item in x:
+#         for i in range:
+#             pass
+#         pass
+#     return 0
 
 
 # Griewank Function
@@ -104,7 +104,7 @@ def F_11(x):
 
 #Schwefel  2.21
 def F_12(x):
-    y = x[0][0]
+    y = 0.000001
     for item in x:
         for i in range(0,len(item)):
             y = max(item[i],y)
