@@ -61,8 +61,9 @@ def DE_solve(f, population_size, bounds, iteration, vec_scaller_f, Cr):
         f, population_size, bounds)
     best_candidate = population[best_idx]
     best_candidate_eva = f(best_candidate)
-
+    mat_solutions = []
     for i in range(iteration):  # until givin iteration
+        
         for j in range(population_size):
             # select 3 vector other than j
             indexs_without_j = [indexs_without_j for indexs_without_j in range(
@@ -81,8 +82,8 @@ def DE_solve(f, population_size, bounds, iteration, vec_scaller_f, Cr):
             if best_candidate_eva > f(population[j]):
                 best_candidate_eva = f(population[j])
                 best_candidate = population[j]
-
-    return best_candidate, best_candidate_eva
+        mat_solutions.append([best_candidate, best_candidate_eva])
+    return best_candidate, best_candidate_eva,mat_solutions
 # ----------------------------------END DE-------------------------------
 
 
@@ -113,7 +114,10 @@ def PSO_solve(f, particles_size, bounds, iteration, alpha, beta):
     best_j = np.argmin(particles_eva)  # find minimum
     best_candidate = particles[best_j][0]
     best_candidate_eva = particles_eva[best_j]
+
+    mat_solutions = []
     for i in range(iteration):
+        
         for j in range(particles_size):
             velocity[j] = Generate_new_velocity(
                 velocity[j], alpha, beta, particles[j][0], best_candidate, particles[j][1])  # new v1
@@ -126,7 +130,8 @@ def PSO_solve(f, particles_size, bounds, iteration, alpha, beta):
             if best_candidate_eva > f(particles[j][1]):
                 best_candidate_eva = f(particles[j][1])
                 best_candidate = particles[j][1]
-    return best_candidate, best_candidate_eva
+        mat_solutions.append([best_candidate, best_candidate_eva])
+    return best_candidate, best_candidate_eva,mat_solutions
 
 # -----------------------------------END PSO--------------------------------------
 
@@ -144,12 +149,13 @@ def KH_solve(f, population_size, bounds, generation_counter, Vf, Dmax, Nmax):
     weight = 0.4  # in range of 0 to 1
     rand_num = 0.3
     Ct = 0.8
-    
+    mat_solutions = []
     for i in range(0, generation_counter):
         population.sort(key=f)
         population_eva = [f(population[e]) for e in range(len(population))]
         best_candidate = population[0]
         best_candidate_eva = population_eva[0]
+        mat_solutions.append([best_candidate, best_candidate_eva])
         for j in range(0, len(population)):
             #   Motion induced by other krill individuals ----------------------------
             Xj = []
@@ -229,7 +235,7 @@ def KH_solve(f, population_size, bounds, generation_counter, Vf, Dmax, Nmax):
             # update locations of krill
             # calculate fitness for each krill in new positions
         # increment generation counter
-    return best_candidate,best_candidate_eva
+    return best_candidate, best_candidate_eva,mat_solutions
 
 
 # -----------------------------------END Krill Herd--------------------------------------

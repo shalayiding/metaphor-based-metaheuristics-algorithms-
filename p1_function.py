@@ -69,12 +69,12 @@ def F_08(x):
 
 #Schwefel 2.26
 def F_09(x):
-    alpha = 418.9829*len(x[0])
+    alpha = 418.9829*2
     y = 0
     for item in x:
         for i in range(0, len(item)):
-            y -=item[i]*np.sin(np.sqrt(np.fabs(item[i]))) 
-    return alpha+y
+            y -=item[i]*math.sin(math.sqrt(math.fabs(item[i])))
+    return alpha+float(y)
 
 
 #Schwefel 1.2
