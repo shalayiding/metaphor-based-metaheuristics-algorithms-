@@ -39,48 +39,62 @@ import matplotlib.pyplot as plt
 # def DE_solve(f, population_size, bounds, iteration,vec_scaller_f,Cr):
 # print("Function 08: Rosenbrock Function")
 # print("Optima: ", OptimaMapping.F_01)
-# print(algo.DE_solve(func.F_08,100,bounds,200,0.4,0.8))
-# print(algo.PSO_solve(func.F_08, 100, bounds, 200,0.4,0.8))
-# print(algo.KH_solve(func.F_08, 100, bounds, 200,0.4,0.8,0.8))
+# print(algo.DE_solve(cost_function,100,bounds,200,0.4,0.8))
+# print(algo.PSO_solve(cost_function, 100, bounds, 200,0.4,0.8))
+# print(algo.KH_solve(cost_function, 100, bounds, 200,0.4,0.8,0.8))
 
 
-# lower_bound = -2
-# upper_bound = 2
-# bounds = [lower_bound,upper_bound]
-# iteration_test = 100
-# population = 50
-# print("Function 08: Rosenbrock Function")
-# x = list(range(0,iteration_test))
-# best_solution,best_eva,mat_solution = algo.DE_solve(func.F_08,population,bounds,iteration_test,0.4,0.8)
-# plt.plot(x,[a[1] for a in mat_solution],c='b',marker= "v",label='DE')
-# best_solution,best_eva,mat_solution = algo.PSO_solve(func.F_08, population, bounds, iteration_test,0.4,0.8)
-# plt.plot(x,[a[1] for a in mat_solution],c='r',marker= "o",label='PSO')
-# best_solution,best_eva,mat_solution = algo.KH_solve(func.F_08, population, bounds, iteration_test,0.4,0.8,0.8)
-# plt.plot(x,[a[1] for a in mat_solution],c='k',marker= "x",label='KH')
-# plt.title("Function 08: Rosenbrock Function")
-# plt.xlabel("Iteration")
-# plt.ylabel("Cost function value")
-# plt.savefig("Function_08_result.png")
+ # ==========================================function 08 ---------------------------------------------------
+lower_bound = -2
+upper_bound = 2
+bounds = [lower_bound,upper_bound]
+iteration_test = 80
+population = 10
+cost_function = func.F_08
+Function_name = "Function 08: Rosenbrock Function"
+
+
+orginal_population = algo.generate_random_population(cost_function,population,bounds)
+x = list(range(0,iteration_test))
+best_solution,best_eva,mat_solution = algo.PSO_solve(orginal_population,cost_function, population, bounds, iteration_test,0.4,0.8)
+plt.plot(x,[a[1] for a in mat_solution],c='r',marker= "o",label='PSO')
+best_solution,best_eva,mat_solution = algo.KH_solve(orginal_population,cost_function, population, bounds, iteration_test,0.02,0.08,0.08)
+plt.plot(x,[a[1] for a in mat_solution],c='k',marker= "x",label='KH')
+best_solution,best_eva,mat_solution = algo.DE_solve(orginal_population,cost_function,population,bounds,iteration_test,0.4,0.8)
+plt.plot(x,[a[1] for a in mat_solution],c='b',marker= "v",label='DE')
+plt.title(Function_name)
+plt.xlabel("Iteration")
+plt.ylabel("Cost function value")
+print(Function_name + "DONE")
+plt.savefig(Function_name+".png")
+plt.clf()
 
 
 
+ # ==========================================function 08 ---------------------------------------------------
 lower_bound = -512
 upper_bound = 512
 bounds = [lower_bound,upper_bound]
-iteration_test = 100
-population = 50
-print("Function 09: Schwefel 2.26 function")
+iteration_test = 200
+population = 20
+cost_function = func.F_09
+Function_name = "Function 09: Schwefel 2.26"
+
+
+orginal_population = algo.generate_random_population(cost_function,population,bounds)
 x = list(range(0,iteration_test))
-best_solution,best_eva,mat_solution = algo.DE_solve(func.F_09,population,bounds,iteration_test,0.4,0.8)
-plt.plot(x,[a[1] for a in mat_solution],c='b',marker= "v",label='DE')
-best_solution,best_eva,mat_solution = algo.PSO_solve(func.F_09, population, bounds, iteration_test,0.4,0.8)
+best_solution,best_eva,mat_solution = algo.PSO_solve(orginal_population,cost_function, population, bounds, iteration_test,0.4,0.8)
 plt.plot(x,[a[1] for a in mat_solution],c='r',marker= "o",label='PSO')
-best_solution,best_eva,mat_solution = algo.KH_solve(func.F_09, population, bounds, iteration_test,0.4,0.8,0.8)
+best_solution,best_eva,mat_solution = algo.KH_solve(orginal_population,cost_function, population, bounds, iteration_test,0.02,0.08,0.08)
 plt.plot(x,[a[1] for a in mat_solution],c='k',marker= "x",label='KH')
-plt.title("Function 09: Schwefel 2.26 function")
+best_solution,best_eva,mat_solution = algo.DE_solve(orginal_population,cost_function,population,bounds,iteration_test,0.4,0.8)
+plt.plot(x,[a[1] for a in mat_solution],c='b',marker= "v",label='DE')
+plt.title(Function_name)
 plt.xlabel("Iteration")
 plt.ylabel("Cost function value")
-plt.savefig("Function_09_result.png")
+print(Function_name + "DONE")
+plt.savefig(Function_name+".png")
+plt.clf()
 
 
 
