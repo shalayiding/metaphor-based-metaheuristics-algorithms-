@@ -262,6 +262,7 @@ def MKH_solve(start_population,f, population_size, bounds, generation_counter, V
 
     for i in range(0, generation_counter):
         mat_solutions.append([best_candidate, best_candidate_eva])
+        
         population.sort(key=f)
         population_eva = [f(population[e]) for e in range(len(population))]
         best_candidate = population[0]
@@ -284,12 +285,14 @@ def MKH_solve(start_population,f, population_size, bounds, generation_counter, V
                     Kjtmp = (population_eva[j] - population_eva[c]) / \
                         (tmp)
                     Kj.append(Kjtmp) 
-            Alocal = sum([(Xj[e] * Kj[e]) for e in range(len(Xj))])  # equation 4
+
+            
             Cbest = 2*(random.rand(1) + i/generation_counter)
 
             Kibest = min(Kj)
             Xibest = Xj[Kj.index(Kibest)]
             Atarget = Cbest*Kibest*Xibest  
+            Alocal = sum([(Xj[e] * Kj[e]) for e in range(len(Xj))])  # equation 4
             Ai = Alocal + Atarget     # equation 3
             N[j] = Nmax*Ai + weight*N[j]    #equation 2
             
@@ -307,6 +310,8 @@ def MKH_solve(start_population,f, population_size, bounds, generation_counter, V
 
             Bi = Bifood + Bibest #  equeation 11
             F[j] = Vf*Bi + weight*F[j] # equation 10
+
+
             #physical diffusion ----------------------------
             D[j] = Dmax* (1-i/generation_counter)*random.uniform(-1,1,2)
             dXi_dt = N[j] + F[j] + D[j] # equation 1
@@ -315,16 +320,16 @@ def MKH_solve(start_population,f, population_size, bounds, generation_counter, V
             Newposition = population[j] + Ct*dXi_dt # equation 18
             # cross over 
             Cr = 0.2*Kibest # equation 21
-            Newposition = crossover(Newposition, population[j], Cr) # equation 20
 
-            
+
+            Newposition = crossover(Newposition, population[j], Cr) # equation 20
             #mutation around the global best 
             Mu = 0.05/Kibest# equation 23
             if random.rand(1) < Mu:
                 indexs_without_j = [indexs_without_j for indexs_without_j in range(
                 population_size) if indexs_without_j != j]
                 v1,v2,v3 = random.choice(indexs_without_j, 3, replace=False)
-                Three_vector = [best_candidate, population[v2], population[v3]]
+                Three_vector = [best_candidate, Newposition, population[v3]]
                 Newposition = mutation(
                     Three_vector, random.rand(1))  # generate new vector
         
@@ -340,6 +345,10 @@ def MKH_solve(start_population,f, population_size, bounds, generation_counter, V
                         target = population[c]
                         Newposition = crossover(target,population[j],Cr)
             clip_bound(Newposition, bounds)
+
+            if f(Newposition) < f(population[j]):
+                population[j] = np.array(Newposition)
+                population_eva[j] = f(population[j])
             
 
 
